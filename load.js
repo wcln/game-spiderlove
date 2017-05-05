@@ -12,6 +12,7 @@ var PATH_TO_QUESTION_IMAGES = "images/question_images/";
 
 // bitmap variables
 var backgroundImage;
+var checkButton, resetButton;
 var leftImages = [];
 var rightImages = [];
 
@@ -28,6 +29,14 @@ function setupManifest() {
     		src: "images/background.png",
     		id: "background"
     	},
+        {
+            src: "images/check_button.png",
+            id: "check_button"
+        },
+        {
+            src: "images/reset_button.png",
+            id: "reset_button"
+        },
         {
             src: PATH_TO_QUESTION_IMAGES + "left1.jpg",
             id: "left1"
@@ -87,9 +96,13 @@ function handleFileLoad(event) {
    	if (event.item.id == "background") {
    		backgroundImage = new createjs.Bitmap(event.result);
    	} else if (event.item.id.includes("left")) {
-        leftImages.push({id: event.item.id.replace("left", ""), bitmap: new createjs.Bitmap(event.result)});
+        leftImages.push({id: event.item.id, bitmap: new createjs.Bitmap(event.result)});
     } else if (event.item.id.includes("right")) {
-        rightImages.push({id: event.item.id.replace("right", ""), bitmap: new createjs.Bitmap(event.result)});
+        rightImages.push({id: event.item.id, bitmap: new createjs.Bitmap(event.result)});
+    } else if (event.item.id == "check_button") {
+        checkButton = new createjs.Bitmap(event.result);
+    } else if (event.item.id == "reset_button") {
+        resetButton = new createjs.Bitmap(event.result);
     }
 }
 
