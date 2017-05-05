@@ -7,22 +7,67 @@
 
 // THIS FILE FOR LOADING ALL ASSETS FOR SPIDERS QUIZ GAME //
 
+
+var PATH_TO_QUESTION_IMAGES = "images/question_images/";
+
 // bitmap variables
 var backgroundImage;
+var leftImages = [];
+var rightImages = [];
 
 
 ///////////////////////////////// PRELOAD JS FUNCTIONS
 
 function setupManifest() {
 	manifest = [
-	{
-		src: "sounds/click.mp3",
-		id: "click"
-	},
-	{
-		src: "images/background.png",
-		id: "background"
-	}
+    	{
+    		src: "sounds/click.mp3",
+    		id: "click"
+    	},
+    	{
+    		src: "images/background.png",
+    		id: "background"
+    	},
+        {
+            src: PATH_TO_QUESTION_IMAGES + "left1.jpg",
+            id: "left1"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "left2.jpg",
+            id: "left2"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "left3.jpg",
+            id: "left3"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "left4.jpg",
+            id: "left4"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "left5.jpg",
+            id: "left5"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "right1.jpg",
+            id: "right1"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "right2.jpg",
+            id: "right2"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "right3.jpg",
+            id: "right3"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "right4.jpg",
+            id: "right4"
+        },
+        {
+            src: PATH_TO_QUESTION_IMAGES + "right5.jpg",
+            id: "right5"
+        }
 	];
 }
 
@@ -41,7 +86,11 @@ function handleFileLoad(event) {
     // create bitmaps of images
    	if (event.item.id == "background") {
    		backgroundImage = new createjs.Bitmap(event.result);
-   	}
+   	} else if (event.item.id.includes("left")) {
+        leftImages.push({id: event.item.id.replace("left", ""), bitmap: new createjs.Bitmap(event.result)});
+    } else if (event.item.id.includes("right")) {
+        rightImages.push({id: event.item.id.replace("right", ""), bitmap: new createjs.Bitmap(event.result)});
+    }
 }
 
 function loadError(evt) {

@@ -1,0 +1,24 @@
+{
+	"pictures":[
+		{
+			"left":"left1.png",
+			"right":"right1.png"
+		},
+		{
+			"left":"left2.png",
+			"right":"right2.png"
+		},
+		{
+			"left":"left3.png",
+			"right":"right3.png"
+		},
+		{
+			"left":"left4.png",
+			"right":"right4.png"
+		},
+		{
+			"left":"left5.png",
+			"right":"right5.png"
+		}
+	]
+}
