@@ -16,6 +16,8 @@ var checkButton, resetButton;
 var leftImages = [];
 var rightImages = [];
 
+var loadComplete = false;
+
 
 ///////////////////////////////// PRELOAD JS FUNCTIONS
 
@@ -129,6 +131,8 @@ function loadComplete(event) {
    	stage.addChild(startText);
     stage.addChild(backgroundImage);
     stage.update();
+
+    loadComplete = true;
 }
 
 ///////////////////////////////////// END PRELOADJS FUNCTIONS
