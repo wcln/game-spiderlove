@@ -33,6 +33,10 @@ var pairs = [];
 
 var box; // drawn around selected image
 
+// animations
+var heSpiderAnimation;
+var sheSpiderAnimation;
+
 
 /*
  * Handles initialization of game components
@@ -82,50 +86,70 @@ function startGame() {
  * Displays the end game screen
  */
 function endGame() {
-	spiderWebImage.alpha = 0;
-	spiderWebImage.x = STAGE_WIDTH/2 - spiderWebImage.image.width/2;
-	spiderWebImage.y = STAGE_HEIGHT/2 - spiderWebImage.image.height/2;
-	stage.addChild(spiderWebImage);
-	createjs.Tween.get(spiderWebImage).to({alpha: 1}, 2000);
 
-	// spiders run in to middle and a heart with score appears animation
-	heSpiderImage.x = -heSpiderImage.image.width;
-	heSpiderImage.y = STAGE_HEIGHT/2 - heSpiderImage.image.height/2;
-	sheSpiderImage.x = 500; // for some reason STAGE_WIDTH is not working here even though it is 500?
-	sheSpiderImage.y = STAGE_HEIGHT/2 - sheSpiderImage.image.height/2;
+	var soundToPlay = "success";
+	if (score < 5) {
+		spiderWebImage = spiderWebBrokenImage;
+		heartImage = heartBrokenImage;
+		soundToPlay = "beep";
+	}
 
-	stage.addChild(heSpiderImage);
-	stage.addChild(sheSpiderImage);
+	if (true) { // if student got 5/5 (perfect score)
 
-	createjs.Tween.get(heSpiderImage).to({x: STAGE_WIDTH/2 - heSpiderImage.image.width - 5}, 2000);
-	createjs.Tween.get(sheSpiderImage).to({x: STAGE_WIDTH/2 + 5}, 2000);
+		spiderWebImage.alpha = 0;
+		spiderWebImage.x = STAGE_WIDTH/2 - spiderWebImage.image.width/2;
+		spiderWebImage.y = STAGE_HEIGHT/2 - spiderWebImage.image.height/2;
+		stage.addChild(spiderWebImage);
+		createjs.Tween.get(spiderWebImage).to({alpha: 1}, 2000);
 
-	// show the heart with score
-	heartImage.scaleX = 0.1;
-	heartImage.scaleY = 0.1;
-	heartImage.regX = heartImage.getBounds().width/2;
-	heartImage.regY = heartImage.getBounds().height/2;
-	heartImage.alpha = 0;
-	heartImage.x = STAGE_WIDTH/2;
-	heartImage.y = STAGE_HEIGHT/2 - heartImage.getBounds().height/2 - 20;
+		// spiders run in to middle and a heart with score appears animation
+		heSpiderAnimation.x = -heSpiderImage.image.width;
+		heSpiderAnimation.y = STAGE_HEIGHT/2 - heSpiderImage.image.height/2;
+		sheSpiderAnimation.x = 500; // for some reason STAGE_WIDTH is not working here even though it is 500?
+		sheSpiderAnimation.y = STAGE_HEIGHT/2 - sheSpiderImage.image.height/2;
 
-	stage.addChild(heartImage);
+		stage.addChild(heSpiderAnimation);
+		stage.addChild(sheSpiderAnimation);
+
+		// animate
+		heSpiderAnimation.gotoAndPlay("crawl");
+		sheSpiderAnimation.gotoAndPlay("crawl");
+
+		createjs.Tween.get(heSpiderAnimation).to({x: STAGE_WIDTH/2 - heSpiderImage.image.width - 5}, 2000).call(function() { heSpiderAnimation.gotoAndPlay("stop"); });
+		createjs.Tween.get(sheSpiderAnimation).to({x: STAGE_WIDTH/2 + 5}, 2000).call(function() { sheSpiderAnimation.gotoAndPlay("stop"); });
+
+		// show the heart with score
+		heartImage.scaleX = 0.1;
+		heartImage.scaleY = 0.1;
+		heartImage.regX = heartImage.getBounds().width/2;
+		heartImage.regY = heartImage.getBounds().height/2;
+		heartImage.alpha = 0;
+		heartImage.x = STAGE_WIDTH/2;
+		heartImage.y = STAGE_HEIGHT/2 - heartImage.getBounds().height/2 - 20;
+
+		stage.addChild(heartImage);
 
 
-	// display the score
-	scoreText = new createjs.Text("Score: " + score + "/5", "28px Lato", "white");
-	scoreText.scaleX = 0.1;
-	scoreText.scaleY = 0.1;
-	scoreText.regX = scoreText.getMeasuredWidth()/2;
-	scoreText.regY = scoreText.getMeasuredHeight()/2;
-	scoreText.alpha = 0;
-	scoreText.x = STAGE_WIDTH/2;
-	scoreText.y = heartImage.y - 5;
+		// display the score
+		scoreText = new createjs.Text("Score: " + score + "/5", "28px Lato", "white");
+		scoreText.scaleX = 0.1;
+		scoreText.scaleY = 0.1;
+		scoreText.regX = scoreText.getMeasuredWidth()/2;
+		scoreText.regY = scoreText.getMeasuredHeight()/2;
+		scoreText.alpha = 0;
+		scoreText.x = STAGE_WIDTH/2;
+		scoreText.y = heartImage.y - 5;
 
-	stage.addChild(scoreText);
+		stage.addChild(scoreText);
 
-	createjs.Tween.get(heartImage).wait(2000).to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
-	createjs.Tween.get(scoreText).wait(2000).to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
+		createjs.Tween.get(heartImage).wait(2000).call(function() { playSound(soundToPlay); } ).to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
+		createjs.Tween.get(scoreText).wait(2000).to({alpha: 1, scaleX: 1, scaleY: 1}, 700);
+
+
+
+	} else { // if the student did NOT get a perfect score
+
+	}
 
 	// reset button
 	resetButton.x = STAGE_WIDTH/2 - resetButton.image.width/2;
@@ -139,21 +163,56 @@ function endGame() {
  */
 function initGraphics() {
 
+	// load spider animation sprite data
+	var heSpiderSpriteData = {
+		images: ["images/animations/he_spider_sprite.png"],
+		frames: {width:100, height:50, count:2, regX:0, regY:0, spacing:0, margin:0},
+		animations: {
+			crawl: [0, 1, true],
+			stop: [0, false]
+		}
+	};
+	heSpiderAnimation = new createjs.Sprite(new createjs.SpriteSheet(heSpiderSpriteData));
+
+	var sheSpiderSpriteData = {
+		images: ["images/animations/she_spider_sprite.png"],
+		frames: {width:100, height:56, count:2, regX:0, regY:0, spacing:0, margin:0},
+		animations: {
+			crawl: [0, 1, true],
+			stop: [0, false]
+		}
+	};
+	sheSpiderAnimation = new createjs.Sprite(new createjs.SpriteSheet(sheSpiderSpriteData));
+
 	// draw check button
 	checkButton.x = STAGE_WIDTH/2 - checkButton.image.width/2 + 5;
 	checkButton.y = STAGE_HEIGHT - checkButton.image.height - 10;
+	checkButtonPressed.x = checkButton.x;
+	checkButtonPressed.y = checkButton.y;
 	stage.addChild(checkButton);
-
+	checkButton.cursor = "pointer";
+	checkButtonPressed.cursor = "pointer";
 	// check button listener
 	checkButton.on("click", function(event) {
 		checkButtonHandler();
 	})
+	checkButton.on("mouseover", function() {
+		stage.addChild(checkButtonPressed);
+		stage.removeChild(checkButton);
+	});
+	checkButtonPressed.on("mouseout", function() {
+		stage.addChild(checkButton);
+		stage.removeChild(checkButtonPressed);
+	});
+	checkButtonPressed.on("click", function() {
+		checkButtonHandler();
+	});
 
 	// draw reset button
 	resetButton.x = 26;
 	resetButton.y = STAGE_HEIGHT - resetButton.image.height - 10;
 	//stage.addChild(resetButton);
-
+	resetButton.cursor = "pointer";
 	// reset button listener
 	resetButton.on("click", function(event) {
 		resetButtonHandler();
@@ -173,6 +232,7 @@ function initGraphics() {
 		image.scaleY = IMAGE_HEIGHT / image.image.height;
 		image.x = X_FOR_LEFT;
 		image.y = Y_FOR_LEFT + (DISTANCE_BETWEEN*i);
+		image.cursor = "pointer";
 
 		image.on("click", function(event) {
 			imageClickHandler(event);
@@ -191,6 +251,7 @@ function initGraphics() {
 		image.scaleY = IMAGE_HEIGHT / image.image.height;
 		image.x = X_FOR_RIGHT;
 		image.y = Y_FOR_RIGHT + (DISTANCE_BETWEEN*i);
+		image.cursor = "pointer";
 
 		image.on("click", function(event) {
 			imageClickHandler(event);
@@ -345,9 +406,9 @@ var PATH_TO_QUESTION_IMAGES = "images/question_images/";
 // bitmap variables
 var backgroundImage;
 var checkButton, resetButton; // buttons
-var spiderWebImage; // the spider web png
+var spiderWebImage, spiderWebBrokenImage; // the spider web png
 var heSpiderImage, sheSpiderImage; // spider images
-var heartImage;
+var heartImage, heartBrokenImage;
 var leftImages = []; // images to be displayed in left column
 var rightImages = []; // images to be displayed in right column
 
@@ -361,6 +422,14 @@ function setupManifest() {
     		id: "click"
     	},
     	{
+    		src: "sounds/success.wav",
+    		id: "success"
+    	},
+    	{
+    		src: "sounds/beep.wav",
+    		id: "beep"
+    	},
+    	{
     		src: "images/background.png",
     		id: "background"
     	},
@@ -369,12 +438,20 @@ function setupManifest() {
             id: "check_button"
         },
         {
+        	src: "images/check_button_pressed.png",
+        	id: "check_button_pressed"
+        },
+        {
             src: "images/reset_button.png",
             id: "reset_button"
         },
         {
         	src: "images/spider_web.png",
         	id: "spider_web"
+        },
+        {
+        	src: "images/spider_web_broken.png",
+        	id: "spider_web_broken"
         },
         {
         	src: "images/he_spider.png",
@@ -387,6 +464,10 @@ function setupManifest() {
         {
         	src: "images/heart.png",
         	id: "heart"
+        },
+        {
+        	src: "images/heart_broken.png",
+        	id: "heart_broken"
         },
         {
             src: PATH_TO_QUESTION_IMAGES + "left1.jpg",
@@ -462,6 +543,12 @@ function handleFileLoad(event) {
     	sheSpiderImage = new createjs.Bitmap(event.result);
     } else if (event.item.id == "heart") {
     	heartImage = new createjs.Bitmap(event.result);
+    } else if (event.item.id == "heart_broken") {
+    	heartBrokenImage = new createjs.Bitmap(event.result);
+    } else if (event.item.id == "spider_web_broken") {
+    	spiderWebBrokenImage = new createjs.Bitmap(event.result);
+    } else if (event.item.id == "check_button_pressed") {
+    	checkButtonPressed = new createjs.Bitmap(event.result);
     }
 }
 
