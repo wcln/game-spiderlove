@@ -57,7 +57,6 @@ function init() {
 
 	score = 0; // reset game score
 	questionCounter = 0;
-
 }
 
 /*
@@ -421,7 +420,7 @@ function resetButtonHandler() {
 
 /////////////////////////////////////////////////////////////////////////////// ASSET LOADING BELOW
 
-var PATH_TO_QUESTION_IMAGES = "images/question_images/";
+var PATH_TO_QUESTION_IMAGES = "images/question_images/" + SUB_FOLDER + "/";
 
 // bitmap variables
 var backgroundImage;
