@@ -420,7 +420,7 @@ function resetButtonHandler() {
 
 /////////////////////////////////////////////////////////////////////////////// ASSET LOADING BELOW
 
-var PATH_TO_QUESTION_IMAGES = "images/question_images/" + SUB_FOLDER + "/";
+var PATH_TO_QUESTION_IMAGES = "versions/" + SUB_FOLDER + "/";
 
 // bitmap variables
 var backgroundImage;
