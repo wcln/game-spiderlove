@@ -178,6 +178,8 @@ function endGame() {
  */
 function initGraphics() {
 
+	initMuteUnMuteButtons();
+
 	// load spider animation sprite data
 	var heSpiderSpriteData = {
 		images: ["images/animations/he_spider_sprite.png"],
@@ -256,7 +258,7 @@ function initGraphics() {
 		image.on("click", function(event) {
 			imageClickHandler(event);
 		});
-		
+
 
 		stage.addChild(image);
 	}
@@ -278,6 +280,26 @@ function initGraphics() {
 
 		stage.addChild(image);
 	}
+}
+
+/*
+ * Adds the mute and unmute buttons to the stage and defines listeners
+ */
+function initMuteUnMuteButtons() {
+	var hitArea = new createjs.Shape();
+	hitArea.graphics.beginFill("#000").drawRect(0, 0, muteButton.image.width, muteButton.image.height);
+	muteButton.hitArea = unmuteButton.hitArea = hitArea;
+
+	muteButton.x = unmuteButton.x = STAGE_WIDTH - muteButton.image.width - 5;
+	muteButton.y = unmuteButton.y = 5;
+
+	muteButton.cursor = "pointer";
+	unmuteButton.cursor = "pointer";
+
+	muteButton.on("click", toggleMute);
+	unmuteButton.on("click", toggleMute);
+
+	stage.addChild(muteButton);
 }
 
 /*
@@ -344,7 +366,7 @@ function imageClickHandler(event) {
 						stage.removeChild(box);
 						stage.removeChild(box2);
 					}, 200);
-					
+
 				}
 
 			}
@@ -430,6 +452,7 @@ var heSpiderImage, sheSpiderImage, heSpiderSadImage, sheSpiderSadImage; // spide
 var heartImage, heartBrokenImage;
 var leftImages = []; // images to be displayed in left column
 var rightImages = []; // images to be displayed in right column
+var muteButton, unmuteButton;
 
 
 ///////////////////////////////// PRELOAD JS FUNCTIONS
@@ -535,13 +558,21 @@ function setupManifest() {
         {
         	src: "images/she_spider_sad.png",
         	id: "she_spider_sad"
-        }
+        },
+				{
+					src: "images/mute.png",
+					id: "mute"
+				},
+				{
+					src: "images/unmute.png",
+					id: "unmute"
+				}
 	];
 }
 
 function startPreload() {
 	preload = new createjs.LoadQueue(true);
-    preload.installPlugin(createjs.Sound);          
+    preload.installPlugin(createjs.Sound);
     preload.on("fileload", handleFileLoad);
     preload.on("progress", handleFileProgress);
     preload.on("complete", loadComplete);
@@ -580,7 +611,11 @@ function handleFileLoad(event) {
     	heSpiderSadImage = new createjs.Bitmap(event.result);
     } else if (event.item.id == "she_spider_sad") {
     	sheSpiderSadImage = new createjs.Bitmap(event.result);
-    }
+    } else if (event.item.id == "mute") {
+			muteButton = new createjs.Bitmap(event.result);
+		} else if (event.item.id == "unmute") {
+			unmuteButton = new createjs.Bitmap(event.result);
+		}
 }
 
 function loadError(evt) {
