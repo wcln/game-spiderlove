@@ -332,7 +332,7 @@ function imageClickHandler(event) {
 
 				// if the next selction is in the same column (invalid)
 				if (firstColumn === secondColumn) {
-					alert("Can't choose image in the same column!");
+					showAlert("Can't choose image in the same column!");
 				} else {
 
 					// draw a line between two images
@@ -371,7 +371,7 @@ function imageClickHandler(event) {
 
 			}
 		} else {
-			alert("Already paired! Choose a different image.");
+			showAlert("Already paired! Choose a different image.");
 		}
 	}
 }
@@ -386,6 +386,20 @@ function isPairedAlready(id) {
 		}
 	}
 	return false;
+}
+
+function showAlert(message) {
+	var alertText = new createjs.Text(message, '15px Lato', 'black');
+	alertText.x = STAGE_WIDTH/2 - alertText.getMeasuredWidth()/2;
+	alertText.y = 80;
+
+	alertBox.alpha = 1;
+	alertText.alpha = 1;
+	stage.addChild(alertBox);
+	stage.addChild(alertText);
+
+	createjs.Tween.get(alertBox).to({alpha:.2}, 1500).call(function() {stage.removeChild(alertBox)});
+	createjs.Tween.get(alertText).to({alpha:.2}, 1500).call(function() {stage.removeChild(alertText)});
 }
 
 /*
@@ -426,7 +440,7 @@ function checkButtonHandler() {
 			}, 1500); // time for students to view what is correct or incorrect
 
 		} else {
-			alert("Please match all of the images!");
+			showAlert("Please match all of the images!");
 		}
 	}
 
@@ -453,7 +467,7 @@ var heartImage, heartBrokenImage;
 var leftImages = []; // images to be displayed in left column
 var rightImages = []; // images to be displayed in right column
 var muteButton, unmuteButton;
-
+var alertBox;
 
 ///////////////////////////////// PRELOAD JS FUNCTIONS
 
@@ -566,6 +580,10 @@ function setupManifest() {
 				{
 					src: "images/unmute.png",
 					id: "unmute"
+				},
+				{
+					src: "images/alert.png",
+					id: "alertBox"
 				}
 	];
 }
@@ -615,6 +633,8 @@ function handleFileLoad(event) {
 			muteButton = new createjs.Bitmap(event.result);
 		} else if (event.item.id == "unmute") {
 			unmuteButton = new createjs.Bitmap(event.result);
+		} else if (event.item.id == "alertBox") {
+			alertBox = new createjs.Bitmap(event.result);
 		}
 }
 
